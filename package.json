@@ -10,7 +10,8 @@
     "build": "npm run build:html && npm run build:css && npm run build:js",
     "release": "npm run build:html && npm run build:css && webpack --mode production",
     "watch": "watch 'npm run build' src",
-    "clean": "rm -f dist/*.html dist/js/* dist/css/*"
+    "clean": "rm -f dist/*.html dist/js/* dist/css/*",
+    "start": "concurrently \"webpack serve --mode development --open\" \"npm run watch\""
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,9 @@
   "devDependencies": {
     "pug-cli": "^1.0.0-alpha6",
     "stylus": "^0.64.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.10.0",
+    "concurrently": "^7.0.0"
   },
   "dependencies": {
     "@kobalab/majiang-ai": "^1.0.13",

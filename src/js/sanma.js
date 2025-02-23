@@ -9,10 +9,9 @@
 
 const { hide, show, fadeIn, scale, setSelector, clearSelector } = Majiang.UI.Util;
 
-let loaded;
+let loaded = false;
 
 $(function () {
-    let game;
     const pai = Majiang.UI.pai($('#loaddata'));
     const audio = Majiang.UI.audio($('#loaddata'));
 
@@ -24,8 +23,7 @@ $(function () {
         $('#board .controller').addClass('paipu')
         $('body').attr('class', 'board');
         scale($('#board'), $('#space'));
-        return new Majiang.UI.Paipu(
-            $('#board'), paipu, pai, audio, 'Majiang.pref',
+        return new Majiang.UI.Paipu($('#board'), paipu, pai, audio, 'Majiang.pref',
             () => fadeIn($('body').attr('class', 'file')),
             analyzer);
     };
@@ -36,13 +34,14 @@ $(function () {
     };
     const file = new Majiang.UI.PaipuFile($('#file'), 'Majiang.game', viewer, stat);
     const rule = Majiang.rule(JSON.parse(localStorage.getItem('Majiang.rule') || '{}'));
+    rule['mode'] = 'sanma';
 
     function start() {
-        let players = [new Majiang.UI.Player($('#board'), pai, audio)];
-        for (let i = 1; i < 4; i++) {
+        const players = [new Majiang.UI.Player($('#board'), pai, audio)];
+        for (let i = 1; i < 3; i++) {
             players[i] = new Majiang.AI();
         }
-        game = new Majiang.Game(players, end, rule);
+        const game = new Majiang.Sanma(players, end, rule);
         game.view = new Majiang.UI.Board($('#board .board'), pai, audio, game.model);
 
         $('#board .controller').removeClass('paipu')
@@ -66,6 +65,7 @@ $(function () {
     setTimeout(() => {
         $(window).on('load', () => {
             if (!file.isEmpty) return end();
+
             hide($('#title .loading'));
             $('#title .start')
                 .attr('tabindex', 0).attr('role', 'button')
